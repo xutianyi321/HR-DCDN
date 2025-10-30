@@ -7,12 +7,12 @@ from torch_geometric.utils import add_self_loops
 lstm_layer = 4
 
 
-class HR_HGDN(nn.Module):
+class HR_DCGN(nn.Module):
     def __init__(self, num_users, num_items, num_rate_levels, emb_dim, device,use_social,random_social):
-        super(HR_HGDN, self).__init__()
-        # 这两个参数通过外面传入 args 设置
-        self.use_social = use_social  # 是否使用真实社交图
-        self.random_social = random_social  # 是否用随机图替代
+        super(HR_DCGN, self).__init__()
+
+        self.use_social = use_social  
+        self.random_social = random_social  
         self.num_users = num_users
         self.num_items = num_items
         self.num_rate_levels = num_rate_levels
@@ -45,28 +45,22 @@ class HR_HGDN(nn.Module):
           # ===== ablation for social graph =====
 
         if not self.use_social:
-            # 禁用社交图：传入空边列表
+
                 soc_edge_index = torch.empty((2, 0), dtype=torch.long, device=soc_edge_index.device)
         user_interest_emb = self.user_model(uids, u_item_pad, soc_edge_index)
         item_attraction_emb = self.item_model(iids, i_user_pad)
-        # elif self.random_social:
-        #   # 随机社交图：保持原始节点数和边数，随机重连
-        #         num_nodes = self.num_users
-        #         E = soc_edge_index.size(1)
-        #         rows = torch.randint(0, num_nodes, (E,), device=soc_edge_index.device)
-        #         cols = torch.randint(0, num_nodes, (E,), device=soc_edge_index.device)
-        #         soc_edge_index = torch.stack([rows, cols], dim=0)
+
         if self.use_social and self.random_social:
-            # 节点数 = batch_size
+
             batch_size = user_interest_emb.size(0)
-            # 保持原始边数 E 不变
+
             E = soc_edge_index.size(1)
             rows = torch.randint(0, batch_size, (E,), device=soc_edge_index.device)
             cols = torch.randint(0, batch_size, (E,), device=soc_edge_index.device)
             soc_edge_index = torch.stack([rows, cols], dim=0)
-            # 断言检查
+
             assert soc_edge_index.max().item() < batch_size, (
-                f"随机社交图越界：max_idx={soc_edge_index.max().item()} ≥ batch_size={batch_size}"
+                f"ERROR：max_idx={soc_edge_index.max().item()} ≥ batch_size={batch_size}"
             )
 
         # # User Interest Embedding and Item Attractiveness Embedding
