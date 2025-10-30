@@ -24,7 +24,7 @@ import torch.optim as optim
 
 from utils import collate_fn, load_data
 from model import HR_DCGN
-from dataloader import HGDCGNDataset
+from dataloader import HGDCDNDataset
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--baseline_nmf',    action='store_true', help='run NMF baseline')
