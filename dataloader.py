@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import Dataset
 
 
-class HGDNDataset(Dataset):
+class HGDCHNataset(Dataset):
     def __init__(self, data, u_items_list, u_users_list, i_users_list, i_items_list, num_users, num_items):
         self.data = data
         self.u_items_list = u_items_list
