@@ -7,9 +7,9 @@ from torch_geometric.utils import add_self_loops
 lstm_layer = 4
 
 
-class HR_DCGN(nn.Module):
+class HR_DCDN(nn.Module):
     def __init__(self, num_users, num_items, num_rate_levels, emb_dim, device,use_social,random_social):
-        super(HR_DCGN, self).__init__()
+        super(HR_DCDN, self).__init__()
 
         self.use_social = use_social  
         self.random_social = random_social  
